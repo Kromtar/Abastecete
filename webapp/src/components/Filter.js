@@ -13,6 +13,9 @@ class Filter extends Component {
         {value: false, label: "Alimentos", id: 2},
         {value: false, label: "Bebestibles", id: 3},
         {value: false, label: "Medicamentos", id: 4},
+        {value: false, label: "Alimento de mascotas", id: 5},
+        {value: false, label: "Otros", id: 6},
+        {value: false, label: "No ir, no hay nada", id: 7}
       ],
       desactivado: true,
       adminSelectorMarkerClass:[
@@ -52,7 +55,7 @@ class Filter extends Component {
           onClick={() => this.updateItemSelected(item.id)}
         >
           {item.value ? <i className="material-icons" style={{fontSize:"24px", color:"#160c28"}}>check</i> : null}
-          Solo {item.label}
+          {item.label}
         </a>
       );
     }, this);
@@ -91,7 +94,18 @@ class Filter extends Component {
   }
 
   async filterMarkers(){
-    await this.props.clearAllMarkers().then();
+    let activeFilver = 'none';
+    this.state.itemSelected.forEach((item) => {
+      if(item.value){
+        activeFilver = item.label;
+      }
+    });
+    await this.props.clearAllMarkers();
+    if(activeFilver != 'none'){
+      await this.props.productFilter({productFilter:activeFilver});
+    }else{
+      await this.props.loadMarkers();
+    }
     await this.props.loadStaticMarkers();
     //aqui consultamos por los puntos filtrados
   }
@@ -103,11 +117,21 @@ class Filter extends Component {
           <Col s={3} style={{paddingTop: '10px', paddingBottom: '10px'}}>
 
             <Dropdown trigger={<Button style={{backgroundColor:'#aeb7b3'}} onCloseEnd={this.filterMarkers()}><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
-              <a onClick={() => this.updateItemSelected('-1')}>
+              <a 
+              onClick={() => this.updateItemSelected('-1')}
+              style={{
+                borderStyle: 'solid',
+                borderTopWidth: '0px',
+                borderLeftWidth: '0px',
+                borderRightWidth: '0px',
+                borderBottomWidth: '1px',
+                paddingBottom: '13px',
+                borderColor: '#efcb68'
+              }}
+              >
                 {this.state.desactivado ? <i className="material-icons" style={{fontSize:"24px", color:"#160c28"}}>check</i> : null}
                 Ver todo
               </a>
-              <Divider/>
               {this.renderFilterItems()}
             </Dropdown>
 

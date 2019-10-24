@@ -113,9 +113,10 @@ class Home extends Component {
   }
 
   async componentDidMount(){
-    await this.props.clearAllMarkers();
-    await this.props.loadStaticMarkers();
-    await this.props.loadMarkers();
+    //TODO: Ahora la carga de los puntos la gatilla el filtro, eso tiene que cambiar 
+    //await this.props.clearAllMarkers();
+    //await this.props.loadStaticMarkers();
+    //await this.props.loadMarkers();
     /*
     let bounds = this.mapRef.current.leafletElement.getBounds();
     let mapwidh = Math.abs(bounds._northEast.lat - bounds._southWest.lat); //ancho
@@ -149,7 +150,7 @@ class Home extends Component {
               lat: lat,
               lng: lng
             },
-            zoom: 12
+            zoom: 14
           });
         }
       },null,options);
@@ -258,7 +259,7 @@ class Home extends Component {
         {this.renderNewMarkerFrom()}
         {this.renderEditMarkerFrom()}
         <Map 
-          maxZoom={19}
+          maxZoom={18}
           minZoom={5}
           ref={this.mapRef}
           style={{display: displayMap}}
@@ -266,10 +267,13 @@ class Home extends Component {
           zoom={this.state.zoom}
           onViewportChange={(data) => this.onChangeMapPosition(data)}
           zoomControl={false}
+          //TODO:Ver como arreglar la animacion 
+          animate={false}
         >
           <TileLayer
             attribution='&amp;copy OpenStreetMap \m/ <font color="#160c28"> Con ♥ por Sudo B00yz</font>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
           />
           {this.renderMarker()}
           {this.renderNewMarketIcon()}
