@@ -51,6 +51,28 @@ class Home extends Component {
             </Button >
           </p>
         );
+        const deleteButton = (
+          <p>
+            <Button
+              style={{backgroundColor: 'red', color: '#000411'}}
+              //onClick={ () => this.props.setEditMarkerFromOpen({id: markerId, name: markerData.name, until:this.props.markerDetail.markerDetail.until , queue_level:this.props.markerDetail.markerDetail.queue_level , products: this.props.markerDetail.markerDetail.products}) }
+              disabled={this.props.markerDetail.ready ? false : true}
+            >
+              Eliminar punto
+            </Button >
+          </p>
+        );
+        const checkButton = (
+          <p>
+            <Button
+              style={{backgroundColor: 'green', color: '#000411'}}
+              //onClick={ () => this.props.setEditMarkerFromOpen({id: markerId, name: markerData.name, until:this.props.markerDetail.markerDetail.until , queue_level:this.props.markerDetail.markerDetail.queue_level , products: this.props.markerDetail.markerDetail.products}) }
+              disabled={this.props.markerDetail.ready ? false : true}
+            >
+              Permitir punto
+            </Button >
+          </p>
+        );
         items.push(
           <Marker
             style={{color:'red'}}
@@ -69,6 +91,8 @@ class Home extends Component {
               <p><b>Puedes encontrar:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.products.join(', ') : 'Cargando') : 'Estamos averiguando para usted ♥'}</p>
               <p><b>Hora de cierre:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.until : 'Cargando') : markerData.until}</p>
               {markerData.marker_type == 1 ? editButton: <div></div>}
+              {markerData.marker_type == 1 ? deleteButton: <div></div>}
+              {markerData.marker_type == 1 ? checkButton: <div></div>}
             </Popup>
           </Marker>
         );
