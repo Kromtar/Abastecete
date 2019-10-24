@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 
-import { LOAD_STATIC_MARKERS, LOAD_MARKERS, CLEAR_ALL_MARKERS } from '../actions/types';
+import { LOAD_STATIC_MARKERS, LOAD_MARKERS, CLEAR_ALL_MARKERS, TEST_LOCAL_FILTER_ONLY_ENABLED, TEST_LOCAL_FILTER_ONLY_DISABLED } from '../actions/types';
 
 var defaultValues = {
   markers: {
@@ -57,6 +57,26 @@ export default function(state = defaultValues , action) {
       return update(state, {markers: {$merge: dinamycMarkers}} );
     case CLEAR_ALL_MARKERS:
       return update(state, {markers: {$set: {}}} );
+    case TEST_LOCAL_FILTER_ONLY_ENABLED:
+      let newListEnabled = {}
+      Object.entries(state.markers).forEach(function(data) {
+        const markerId = data[0];
+        const markerData = data[1];
+        if(markerData.enable){
+          newListEnabled[markerId] = markerData;
+        }
+      });
+      return update(state, {markers: {$set: newListEnabled}} );
+    case TEST_LOCAL_FILTER_ONLY_DISABLED:
+      let newListDisabled = {}
+      Object.entries(state.markers).forEach(function(data) {
+        const markerId = data[0];
+        const markerData = data[1];
+        if(!markerData.enable){
+          newListDisabled[markerId] = markerData;
+        }
+      });
+      return update(state, {markers: {$set: newListDisabled}} );
     default:
       return state;
   }

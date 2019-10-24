@@ -16,13 +16,7 @@ class Filter extends Component {
         {value: false, label: "Alimento de mascotas", id: 5},
         {value: false, label: "Otros", id: 6},
         {value: false, label: "No ir, no hay nada", id: 7}
-      ],
-      desactivado: true,
-      adminSelectorMarkerClass:[
-        {value: false, label: "Check", id: 1},
-        {value: false, label: "Pendientes", id: 2},
-      ],
-      adminFilterDesactivado: true
+      ]
     }
     this.updateCenderMap = this.updateCenderMap.bind(this);
   }
@@ -62,37 +56,6 @@ class Filter extends Component {
     return(itemList);
   }
 
-  updateItemSelectedAdmin(selection){
-    let auxList = [];
-    this.state.adminSelectorMarkerClass.forEach((item) => {
-      if(item.id == selection){
-        auxList.push({value: true, label: item.label, id: item.id})
-      }else{
-        auxList.push({value: false, label: item.label, id: item.id});
-      }
-    });
-    this.setState({
-      adminSelectorMarkerClass: auxList,
-      adminFilterDesactivado: selection == '-1' ? true:false
-    });
-  }
-
-  renderAdminFilterItems(){
-    let itemList = [];
-    this.state.adminSelectorMarkerClass.forEach((item) => {
-      itemList.push(
-        <a 
-          key={item.id}
-          onClick={() => this.updateItemSelectedAdmin(item.id)}
-        >
-          {item.value ? <i className="material-icons" style={{fontSize:"24px", color:"#160c28"}}>check</i> : null}
-          Solo {item.label}
-        </a>
-      );
-    }, this);
-    return(itemList);
-  }
-
   async filterMarkers(){
     let activeFilver = 'none';
     this.state.itemSelected.forEach((item) => {
@@ -107,7 +70,22 @@ class Filter extends Component {
       await this.props.loadMarkers();
     }
     await this.props.loadStaticMarkers();
-    //aqui consultamos por los puntos filtrados
+  }
+
+  async TESTadminFilter(option){
+    await this.props.clearAllMarkers();
+    if(option == 'enabled'){
+      await this.props.loadMarkers();
+      this.props.TESTlocalFilterOnlyEnabled()
+    }
+    if(option == 'disabled'){
+      await this.props.loadMarkers();
+      this.props.TESTlocalFilterOnlyDisabled()
+    }
+    if(option == 'todo'){
+      await this.props.loadStaticMarkers();
+      await this.props.loadMarkers();
+    }
   }
 
   render() {
@@ -116,7 +94,7 @@ class Filter extends Component {
         <Row style={{textAlign:'center', marginBottom: '0px', paddingLeft: '0px', paddingRight: '0px'}}>
           <Col s={3} style={{paddingTop: '10px', paddingBottom: '10px'}}>
 
-            <Dropdown trigger={<Button style={{backgroundColor:'#aeb7b3'}} onCloseEnd={this.filterMarkers()}><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
+            <Dropdown id={'test1'} trigger={<Button style={{backgroundColor:'#aeb7b3'}} onCloseEnd={this.filterMarkers()}><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
               <a 
               onClick={() => this.updateItemSelected('-1')}
               style={{
@@ -134,20 +112,23 @@ class Filter extends Component {
               </a>
               {this.renderFilterItems()}
             </Dropdown>
-
-            <Dropdown trigger={<Button style={{backgroundColor:'red'}} onCloseEnd={this.filterMarkers()} ><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
-              <a onClick={() => this.updateItemSelectedAdmin('-1')}>
-                {this.state.adminFilterDesactivado ? <i className="material-icons" style={{fontSize:"24px", color:"#160c28"}}>check</i> : null}
-                Todos
-              </a>
-              <Divider/>
-              {this.renderAdminFilterItems()}
-            </Dropdown>
-
-
           </Col>
           <Col s={6} style={{color:'white', paddingLeft: '0px', paddingRight: '0px', paddingTop:'5px', fontSize:'12px'}}>
-            Luego de 24 Horas seguimos trabajando! Cualquier Feedback mandanos un mensaje por <b><a style={{color:'#efcb68'}} href="https://www.instagram.com/abastecete.chile/">Instagram</a></b>.
+            <Button
+              onClick={() => this.TESTadminFilter('todo')}
+            >
+              Ver todo
+            </Button >
+            <Button
+              onClick={() => this.TESTadminFilter('enabled')}
+            >
+              Solo Activados
+            </Button >
+            <Button
+              onClick={() => this.TESTadminFilter('disabled')}
+            >
+              Solo Desactivados
+            </Button >
           </Col>
           <Col s={3} style={{paddingTop: '10px', paddingBottom: '10px', paddingLeft: '0px', paddingRight: '0px'}}>
             <Button

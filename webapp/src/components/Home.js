@@ -65,11 +65,11 @@ class Home extends Component {
         const checkButton = (
           <p>
             <Button
-              style={{backgroundColor: 'green', color: '#000411'}}
-              //onClick={ () => this.props.setEditMarkerFromOpen({id: markerId, name: markerData.name, until:this.props.markerDetail.markerDetail.until , queue_level:this.props.markerDetail.markerDetail.queue_level , products: this.props.markerDetail.markerDetail.products}) }
+              style={{backgroundColor: markerData.enable ? '#ff6600' : '#00cc66', color: '#000411'}}
+              onClick={ () => this.props.changeAuth({id: markerId, enabledStatus: !markerData.enable})}
               disabled={this.props.markerDetail.ready ? false : true}
             >
-              Permitir punto
+              {markerData.enable ? 'Desactivar' : 'Activar'}
             </Button >
           </p>
         );
@@ -86,12 +86,13 @@ class Home extends Component {
             }}
           >
             <Popup autoPan={false}>
+              {markerData.enable ? 'Actualmente Activado' : 'Actualmente Desactivado'}
               <p style={{fontSize:'18px'}}><b>{markerData.name}</b></p>
               <p><b>Cantidad de Personas:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.queue_level : 'Cargando') : 'Estamos averiguando para usted ♥'}</p>
               <p><b>Puedes encontrar:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.products.join(', ') : 'Cargando') : 'Estamos averiguando para usted ♥'}</p>
               <p><b>Hora de cierre:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.until : 'Cargando') : markerData.until}</p>
               {markerData.marker_type == 1 ? editButton: <div></div>}
-              {markerData.marker_type == 1 ? deleteButton: <div></div>}
+              {/*markerData.marker_type == 1 ? deleteButton: <div></div>*/}
               {markerData.marker_type == 1 ? checkButton: <div></div>}
             </Popup>
           </Marker>
