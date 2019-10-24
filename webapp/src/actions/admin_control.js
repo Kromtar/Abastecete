@@ -2,7 +2,8 @@ import axios from 'axios';
 
 import {
     TEST_LOCAL_FILTER_ONLY_ENABLED,
-    TEST_LOCAL_FILTER_ONLY_DISABLED
+    TEST_LOCAL_FILTER_ONLY_DISABLED,
+    SET_GLOBAL_CONFIG
 } from './types';
 
 
@@ -27,13 +28,20 @@ export const changeAuth = (data) => async (dispatch) => {
     }
   };
   
+export const TESTlocalFilterAll= () => dispatch => new Promise((resolve, reject) => {
+    dispatch({ type: SET_GLOBAL_CONFIG, payload:{adminEnabledFilter: 'none'}});
+    resolve();
+})
 
 export const TESTlocalFilterOnlyEnabled= () => dispatch => new Promise((resolve, reject) => {
-    dispatch({ type: TEST_LOCAL_FILTER_ONLY_ENABLED, payload:null});
+    //dispatch({ type: TEST_LOCAL_FILTER_ONLY_ENABLED, payload:null});
+    dispatch({ type: SET_GLOBAL_CONFIG, payload:{adminEnabledFilter: 'enabled'}});
     resolve();
 });
 
 export const TESTlocalFilterOnlyDisabled= () => dispatch => new Promise((resolve, reject) => {
-    dispatch({ type: TEST_LOCAL_FILTER_ONLY_DISABLED, payload:null});
+    //dispatch({ type: TEST_LOCAL_FILTER_ONLY_DISABLED, payload:null});
+    dispatch({ type: SET_GLOBAL_CONFIG, payload:{adminEnabledFilter: 'disabled'}});
     resolve();
 });
+

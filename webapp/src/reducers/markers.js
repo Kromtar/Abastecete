@@ -42,21 +42,48 @@ export default function(state = defaultValues , action) {
       return update(state, {markers: {$merge: statics}} );
     case LOAD_MARKERS:
       let dinamycMarkers = {};
-      //console.log(action.payload.markerList);
+
       action.payload.markerList.forEach(element => {
-        dinamycMarkers[element.marker_id] = {
-          lat: element.lat,
-          lng: element.long,
-          name: element.name,
-          until: 'none',
-          marker_type: element.marker_type, 
-          enable: element.enable
+        if(action.payload.adminFilter == 'none'){    
+          dinamycMarkers[element.marker_id] = {
+            lat: element.lat,
+            lng: element.long,
+            name: element.name,
+            until: 'none',
+            marker_type: element.marker_type, 
+            enable: element.enable
+          }
+        }else if(action.payload.adminFilter == 'enabled'){
+          if(element.enable){
+            dinamycMarkers[element.marker_id] = {
+              lat: element.lat,
+              lng: element.long,
+              name: element.name,
+              until: 'none',
+              marker_type: element.marker_type, 
+              enable: element.enable
+            }
+          }
+        }else if(action.payload.adminFilter == 'disabled'){
+          if(!element.enable){
+            dinamycMarkers[element.marker_id] = {
+              lat: element.lat,
+              lng: element.long,
+              name: element.name,
+              until: 'none',
+              marker_type: element.marker_type, 
+              enable: element.enable
+            }
+          }
+        }else{
+          dinamycMarkers = {};
         }
       });
       //console.log(dinamycMarkers);
       return update(state, {markers: {$merge: dinamycMarkers}} );
     case CLEAR_ALL_MARKERS:
       return update(state, {markers: {$set: {}}} );
+    /*
     case TEST_LOCAL_FILTER_ONLY_ENABLED:
       let newListEnabled = {}
       Object.entries(state.markers).forEach(function(data) {
@@ -77,6 +104,7 @@ export default function(state = defaultValues , action) {
         }
       });
       return update(state, {markers: {$set: newListDisabled}} );
+    */
     default:
       return state;
   }

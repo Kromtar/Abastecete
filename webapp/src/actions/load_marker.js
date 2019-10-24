@@ -28,7 +28,7 @@ export const loadStaticMarkers = () => async (dispatch) => {
     }
 };
 
-export const loadMarkers = () => async (dispatch) => {
+export const loadMarkers = (adminFilter) => async (dispatch) => {
     try {
         let body = JSON.stringify({ latMin: -100, latMax: 100, lngMin: -100, lngMax: 100 })
         let config = {
@@ -38,7 +38,7 @@ export const loadMarkers = () => async (dispatch) => {
             }
         }
         const res = await axios.post(process.env.REACT_APP_BASE_URL+'/markers/list',body,config);
-        dispatch({ type: LOAD_MARKERS, payload: {markerList: res.data}});
+        dispatch({ type: LOAD_MARKERS, payload: {markerList: res.data, adminFilter: adminFilter}});
         return true;
     } catch (err) {
         console.log(err);

@@ -67,7 +67,7 @@ class Filter extends Component {
     if(activeFilver != 'none'){
       await this.props.productFilter({productFilter:activeFilver});
     }else{
-      await this.props.loadMarkers();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     }
     await this.props.loadStaticMarkers();
   }
@@ -75,16 +75,17 @@ class Filter extends Component {
   async TESTadminFilter(option){
     await this.props.clearAllMarkers();
     if(option == 'enabled'){
-      await this.props.loadMarkers();
-      this.props.TESTlocalFilterOnlyEnabled()
+      await this.props.TESTlocalFilterOnlyEnabled()
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     }
     if(option == 'disabled'){
-      await this.props.loadMarkers();
-      this.props.TESTlocalFilterOnlyDisabled()
+      await this.props.TESTlocalFilterOnlyDisabled();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     }
     if(option == 'todo'){
+      await this.props.TESTlocalFilterAll();
       await this.props.loadStaticMarkers();
-      await this.props.loadMarkers();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     }
   }
 

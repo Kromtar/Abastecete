@@ -120,7 +120,7 @@ class NewMarker extends Component {
       this.setState({error:false, procesando: true})
       this.props.newMarker(data).then(()=>{
         this.props.loadStaticMarkers().then(() => {
-          this.props.loadMarkers().then(() => {
+          this.props.loadMarkers(this.props.globals.adminEnabledFilter).then(() => {
             this.setState({showAviso: true, procesando: false});
           });
         });
@@ -254,4 +254,10 @@ class NewMarker extends Component {
   }
 };
 
-export default connect(null,actions)(NewMarker);
+function mapStateToProps(state){
+  return {
+      globals: state.globals
+  };
+};
+
+export default connect(mapStateToProps,actions)(NewMarker);

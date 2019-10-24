@@ -34,6 +34,13 @@ class Home extends Component {
 
   mapRef = React.createRef();
 
+  async changeAuth(markerId, markerData){
+    await this.props.changeAuth({id: markerId, enabledStatus: !markerData.enable});
+    await this.props.clearAllMarkers();
+    await this.props.loadStaticMarkers();
+    await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
+  }
+
   renderMarker(){
     const items = [];
     //if(!this.props.globals.newMarketShowRefPoint){
@@ -66,7 +73,7 @@ class Home extends Component {
           <p>
             <Button
               style={{backgroundColor: markerData.enable ? '#ff6600' : '#00cc66', color: '#000411'}}
-              onClick={ () => this.props.changeAuth({id: markerId, enabledStatus: !markerData.enable})}
+              onClick={ () => this.changeAuth(markerId, markerData)}
               disabled={this.props.markerDetail.ready ? false : true}
             >
               {markerData.enable ? 'Desactivar' : 'Activar'}
@@ -117,7 +124,7 @@ class Home extends Component {
     //TODO: Ahora la carga de los puntos la gatilla el filtro, eso tiene que cambiar 
     //await this.props.clearAllMarkers();
     //await this.props.loadStaticMarkers();
-    //await this.props.loadMarkers();
+    //await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     /*
     let bounds = this.mapRef.current.leafletElement.getBounds();
     let mapwidh = Math.abs(bounds._northEast.lat - bounds._southWest.lat); //ancho

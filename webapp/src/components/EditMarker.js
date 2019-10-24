@@ -115,7 +115,7 @@ class EditMarker extends Component {
       this.setState({error:false, procesando: true})
       this.props.editMarker(data).then(()=>{
         this.props.loadStaticMarkers().then(() => {
-          this.props.loadMarkers().then(() => {
+          this.props.loadMarkers(this.props.globals.adminEnabledFilter).then(() => {
             this.setState({showAviso: true, procesando: false});
           });
         });
@@ -267,7 +267,8 @@ class EditMarker extends Component {
 
 function mapStateToProps(state){
     return {
-        markerEdit: state.markerEdit
+        markerEdit: state.markerEdit,
+        globals: state.globals
     };
 };
 
