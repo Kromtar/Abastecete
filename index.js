@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 var sslRedirect = require('heroku-ssl-redirect');
+var wwwhisper = require('connect-wwwhisper');
 
 //TODO: Agregar HTTPS
 //TODO: Control de DDOS
@@ -12,6 +13,8 @@ const app = express();
 
 //Use SSL
 app.use(sslRedirect());
+
+app.use(wwwhisper());
 
 //Control de acceso
 app.use((req, res, next) => {
