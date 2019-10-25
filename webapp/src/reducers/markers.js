@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 
-import { LOAD_STATIC_MARKERS, LOAD_MARKERS, CLEAR_ALL_MARKERS } from '../actions/types';
+import { LOAD_STATIC_MARKERS, LOAD_MARKERS, CLEAR_ALL_MARKERS, TEST_LOCAL_FILTER_ONLY_ENABLED, TEST_LOCAL_FILTER_ONLY_DISABLED } from '../actions/types';
 
 var defaultValues = {
   markers: {
@@ -42,21 +42,69 @@ export default function(state = defaultValues , action) {
       return update(state, {markers: {$merge: statics}} );
     case LOAD_MARKERS:
       let dinamycMarkers = {};
-      //console.log(action.payload.markerList);
+
       action.payload.markerList.forEach(element => {
-        dinamycMarkers[element.marker_id] = {
-          lat: element.lat,
-          lng: element.long,
-          name: element.name,
-          until: 'none',
-          marker_type: element.marker_type, 
-          enable: element.enable
+        if(action.payload.adminFilter == 'none'){    
+          dinamycMarkers[element.marker_id] = {
+            lat: element.lat,
+            lng: element.long,
+            name: element.name,
+            until: 'none',
+            marker_type: element.marker_type, 
+            enable: element.enable
+          }
+        }else if(action.payload.adminFilter == 'enabled'){
+          if(element.enable){
+            dinamycMarkers[element.marker_id] = {
+              lat: element.lat,
+              lng: element.long,
+              name: element.name,
+              until: 'none',
+              marker_type: element.marker_type, 
+              enable: element.enable
+            }
+          }
+        }else if(action.payload.adminFilter == 'disabled'){
+          if(!element.enable){
+            dinamycMarkers[element.marker_id] = {
+              lat: element.lat,
+              lng: element.long,
+              name: element.name,
+              until: 'none',
+              marker_type: element.marker_type, 
+              enable: element.enable
+            }
+          }
+        }else{
+          dinamycMarkers = {};
         }
       });
       //console.log(dinamycMarkers);
       return update(state, {markers: {$merge: dinamycMarkers}} );
     case CLEAR_ALL_MARKERS:
       return update(state, {markers: {$set: {}}} );
+    /*
+    case TEST_LOCAL_FILTER_ONLY_ENABLED:
+      let newListEnabled = {}
+      Object.entries(state.markers).forEach(function(data) {
+        const markerId = data[0];
+        const markerData = data[1];
+        if(markerData.enable){
+          newListEnabled[markerId] = markerData;
+        }
+      });
+      return update(state, {markers: {$set: newListEnabled}} );
+    case TEST_LOCAL_FILTER_ONLY_DISABLED:
+      let newListDisabled = {}
+      Object.entries(state.markers).forEach(function(data) {
+        const markerId = data[0];
+        const markerData = data[1];
+        if(!markerData.enable){
+          newListDisabled[markerId] = markerData;
+        }
+      });
+      return update(state, {markers: {$set: newListDisabled}} );
+    */
     default:
       return state;
   }

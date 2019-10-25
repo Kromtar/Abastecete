@@ -16,8 +16,7 @@ class Filter extends Component {
         {value: false, label: "Alimento de mascotas", id: 5},
         {value: false, label: "Otros", id: 6},
         {value: false, label: "No ir, no hay nada", id: 7}
-      ],
-      desactivado: true
+      ]
     }
     this.updateCenderMap = this.updateCenderMap.bind(this);
   }
@@ -68,10 +67,26 @@ class Filter extends Component {
     if(activeFilver != 'none'){
       await this.props.productFilter({productFilter:activeFilver});
     }else{
-      await this.props.loadMarkers();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     }
     await this.props.loadStaticMarkers();
-    //aqui consultamos por los puntos filtrados
+  }
+
+  async TESTadminFilter(option){
+    await this.props.clearAllMarkers();
+    if(option == 'enabled'){
+      await this.props.TESTlocalFilterOnlyEnabled()
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
+    }
+    if(option == 'disabled'){
+      await this.props.TESTlocalFilterOnlyDisabled();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
+    }
+    if(option == 'todo'){
+      await this.props.TESTlocalFilterAll();
+      await this.props.loadStaticMarkers();
+      await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
+    }
   }
 
   render() {
@@ -79,7 +94,8 @@ class Filter extends Component {
       <div>
         <Row style={{textAlign:'center', marginBottom: '0px', paddingLeft: '0px', paddingRight: '0px'}}>
           <Col s={3} style={{paddingTop: '10px', paddingBottom: '10px'}}>
-            <Dropdown trigger={<Button style={{backgroundColor:'#aeb7b3'}} onCloseEnd={this.filterMarkers()}><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
+
+            <Dropdown id={'test1'} trigger={<Button style={{backgroundColor:'#aeb7b3'}} onCloseEnd={this.filterMarkers()}><i className="material-icons" style={{fontSize:"25px", color:"black"}}>filter_list</i></Button>}>
               <a 
               onClick={() => this.updateItemSelected('-1')}
               style={{
@@ -99,7 +115,21 @@ class Filter extends Component {
             </Dropdown>
           </Col>
           <Col s={6} style={{color:'white', paddingLeft: '0px', paddingRight: '0px', paddingTop:'5px', fontSize:'12px'}}>
-            Luego de 24 Horas seguimos trabajando! Cualquier Feedback mandanos un mensaje por <b><a style={{color:'#efcb68'}} href="https://www.instagram.com/abastecete.chile/">Instagram</a></b>.
+            <Button
+              onClick={() => this.TESTadminFilter('todo')}
+            >
+              Ver todo
+            </Button >
+            <Button
+              onClick={() => this.TESTadminFilter('enabled')}
+            >
+              Solo Activados
+            </Button >
+            <Button
+              onClick={() => this.TESTadminFilter('disabled')}
+            >
+              Solo Desactivados
+            </Button >
           </Col>
           <Col s={3} style={{paddingTop: '10px', paddingBottom: '10px', paddingLeft: '0px', paddingRight: '0px'}}>
             <Button

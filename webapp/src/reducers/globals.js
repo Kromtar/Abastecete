@@ -6,6 +6,7 @@ var defaultValues = {
     newMarketShowRefPoint: false,
     newMarketFromOpen: false,
     editMarketFromOpen:false,
+    adminEnabledFilter:'none'
 }
 
 export default function(state = defaultValues , action) {

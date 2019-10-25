@@ -34,6 +34,13 @@ class Home extends Component {
 
   mapRef = React.createRef();
 
+  async changeAuth(markerId, markerData){
+    await this.props.changeAuth({id: markerId, enabledStatus: !markerData.enable});
+    await this.props.clearAllMarkers();
+    await this.props.loadStaticMarkers();
+    await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
+  }
+
   renderMarker(){
     const items = [];
     //if(!this.props.globals.newMarketShowRefPoint){
@@ -51,6 +58,28 @@ class Home extends Component {
             </Button >
           </p>
         );
+        const deleteButton = (
+          <p>
+            <Button
+              style={{backgroundColor: 'red', color: '#000411'}}
+              //onClick={ () => this.props.setEditMarkerFromOpen({id: markerId, name: markerData.name, until:this.props.markerDetail.markerDetail.until , queue_level:this.props.markerDetail.markerDetail.queue_level , products: this.props.markerDetail.markerDetail.products}) }
+              disabled={this.props.markerDetail.ready ? false : true}
+            >
+              Eliminar punto
+            </Button >
+          </p>
+        );
+        const checkButton = (
+          <p>
+            <Button
+              style={{backgroundColor: markerData.enable ? '#ff6600' : '#00cc66', color: '#000411'}}
+              onClick={ () => this.changeAuth(markerId, markerData)}
+              disabled={this.props.markerDetail.ready ? false : true}
+            >
+              {markerData.enable ? 'Desactivar' : 'Activar'}
+            </Button >
+          </p>
+        );
         items.push(
           <Marker
             style={{color:'red'}}
@@ -65,11 +94,13 @@ class Home extends Component {
           >
 
             <Popup autoPan={false}>
+              {markerData.enable ? 'Actualmente Activado' : 'Actualmente Desactivado'}
               <p style={{fontSize:'18px', borderBottomStyle: 'solid', borderBottomWidth: '2px'}}><b>{markerData.name}</b></p>
               <p><b>Cantidad de Personas:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.queue_level : 'Cargando') : 'Estamos averiguando para usted ♥'}</p>
               <p><b>Puedes encontrar:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.products.join(', ') : 'Cargando') : 'Estamos averiguando para usted ♥'}</p>
               <p><b>Hora de cierre:</b> {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.until : 'Cargando') : markerData.until}</p>
               {markerData.marker_type == 1 ? editButton: <div></div>}
+              {markerData.marker_type == 1 ? checkButton: <div></div>}
               <p style={{fontSize: '11px', borderTopStyle: 'solid', borderTopWidth: '1px'}}>Ultima vez que la información fue actualizada&nbsp;&nbsp; {markerData.marker_type == 1 ? (this.props.markerDetail.ready ? this.props.markerDetail.markerDetail.lastChange : 'Cargando') : <div></div>}</p>
             </Popup>
 
@@ -102,7 +133,7 @@ class Home extends Component {
     //TODO: Ahora la carga de los puntos la gatilla el filtro, eso tiene que cambiar 
     //await this.props.clearAllMarkers();
     //await this.props.loadStaticMarkers();
-    //await this.props.loadMarkers();
+    //await this.props.loadMarkers(this.props.globals.adminEnabledFilter);
     /*
     let bounds = this.mapRef.current.leafletElement.getBounds();
     let mapwidh = Math.abs(bounds._northEast.lat - bounds._southWest.lat); //ancho
