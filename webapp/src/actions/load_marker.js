@@ -37,7 +37,7 @@ export const loadMarkers = (adminFilter) => async (dispatch) => {
                 'X-Api-Key': process.env.REACT_APP_API_KEY
             }
         }
-        const res = await axios.post(process.env.REACT_APP_BASE_URL+'/markers/list',body,config);
+        const res = await axios.post(process.env.REACT_APP_BASE_URL+'/markers/dev/list',body,config);
         dispatch({ type: LOAD_MARKERS, payload: {markerList: res.data, adminFilter: adminFilter}});
         return true;
     } catch (err) {
