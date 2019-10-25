@@ -1,4 +1,5 @@
 import update from 'react-addons-update';
+import moment from 'moment';
 
 import { LOAD_STATIC_MARKERS, LOAD_MARKERS, CLEAR_ALL_MARKERS, TEST_LOCAL_FILTER_ONLY_ENABLED, TEST_LOCAL_FILTER_ONLY_DISABLED } from '../actions/types';
 
@@ -42,8 +43,17 @@ export default function(state = defaultValues , action) {
       return update(state, {markers: {$merge: statics}} );
     case LOAD_MARKERS:
       let dinamycMarkers = {};
-
       action.payload.markerList.forEach(element => {
+
+        let lastChange;
+        if(element.updated_at){
+            lastChange = element.updated_at;
+        }else{
+            lastChange = element.created_at;
+        }
+        //TODO: Aplicar TimeZone correctamente
+        lastChange = moment(lastChange).subtract({'hours': 4});
+
         if(action.payload.adminFilter == 'none'){    
           dinamycMarkers[element.marker_id] = {
             lat: element.lat,
@@ -51,7 +61,8 @@ export default function(state = defaultValues , action) {
             name: element.name,
             until: 'none',
             marker_type: element.marker_type, 
-            enable: element.enable
+            enable: element.enable,
+            lastChange: lastChange
           }
         }else if(action.payload.adminFilter == 'enabled'){
           if(element.enable){
@@ -61,7 +72,8 @@ export default function(state = defaultValues , action) {
               name: element.name,
               until: 'none',
               marker_type: element.marker_type, 
-              enable: element.enable
+              enable: element.enable,
+              lastChange: lastChange
             }
           }
         }else if(action.payload.adminFilter == 'disabled'){
@@ -72,7 +84,8 @@ export default function(state = defaultValues , action) {
               name: element.name,
               until: 'none',
               marker_type: element.marker_type, 
-              enable: element.enable
+              enable: element.enable,
+              lastChange: lastChange
             }
           }
         }else{

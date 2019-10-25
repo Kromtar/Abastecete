@@ -10,6 +10,7 @@ import NewMarker from './NewMarker';
 import ToolBar from './ToolBar';
 import Filter from './Filter';
 import EditMarker from './EditMarker';
+import AdminPanel from './AdminPanel';
 
 import {iconMarket, newMarker, iconMarketMini} from '../helpers/iconList';
 import Row from 'react-materialize/lib/Row';
@@ -245,41 +246,45 @@ class Home extends Component {
     const displayMap = this.props.globals.newMarketFromOpen ? 'none' : 'block' && this.props.globals.editMarketFromOpen ? 'none' : 'block';
     return (
       <div>
-        {this.renderNewMarkerFrom()}
-        {this.renderEditMarkerFrom()}
-        <Map 
-          maxZoom={18}
-          minZoom={5}
-          ref={this.mapRef}
-          style={{display: displayMap}}
-          center={[this.state.centerMap.lat,this.state.centerMap.lng]}
-          zoom={this.state.zoom}
-          onViewportChange={(data) => this.onChangeMapPosition(data)}
-          zoomControl={false}
-          //TODO:Ver como arreglar la animacion 
-          animate={false}
-        >
-          <TileLayer
-            attribution='&amp;copy OpenStreetMap \m/ <font color="#160c28"> Con ♥ por Sudo B00yz</font>'
-            //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
-          />
-          {this.renderMarker()}
-          {this.renderNewMarketIcon()}
+        <div style={{position:'fixed', width:'50%', height:'100%', left: '0'}}>
+          {this.renderNewMarkerFrom()}
+          {this.renderEditMarkerFrom()}
+          <Map 
+            maxZoom={18}
+            minZoom={5}
+            ref={this.mapRef}
+            style={{display: displayMap}}
+            center={[this.state.centerMap.lat,this.state.centerMap.lng]}
+            zoom={this.state.zoom}
+            onViewportChange={(data) => this.onChangeMapPosition(data)}
+            zoomControl={false}
+            //TODO:Ver como arreglar la animacion 
+            animate={false}
+          >
+            <TileLayer
+              attribution='&amp;copy OpenStreetMap \m/ <font color="#160c28"> Con ♥ por Sudo B00yz</font>'
+              //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
+            />
+            {this.renderMarker()}
+            {this.renderNewMarketIcon()}
 
-          <Control position="topleft">
-            <Filter updateCenderMap={this.onClickCenterMap}/>
-          </Control>
+            <Control position="topleft">
+              <Filter updateCenderMap={this.onClickCenterMap}/>
+            </Control>
 
-          <Control position="bottomleft" >
-            <ToolBar/>
-          </Control>
+            <Control position="bottomleft" >
+              <ToolBar/>
+            </Control>
 
-          <ZoomControl position={"bottomleft"}/>
-
-        </Map>
+            <ZoomControl position={"bottomleft"}/>
+          </Map>
+        </div>
+        <div style={{position:'fixed', width:'50%', height:'100%', right: '0'}}>
+          <AdminPanel />
+        </div>
       </div>
-    )
+    );
   }
 };
 
