@@ -45,24 +45,19 @@ export default function(state = defaultValues , action) {
       let dinamycMarkers = {};
       action.payload.markerList.forEach(element => {
 
-        let lastChange;
-        if(element.updated_at){
-            lastChange = element.updated_at;
-        }else{
-            lastChange = element.created_at;
-        }
         //TODO: Aplicar TimeZone correctamente
-        lastChange = moment(lastChange).subtract({'hours': 4});
+        let created_at = moment(element.created_at).subtract({'hours': 4});
+        let updated_at = moment(element.updated_at).subtract({'hours': 4});
 
         if(action.payload.adminFilter == 'none'){    
           dinamycMarkers[element.marker_id] = {
             lat: element.lat,
             lng: element.long,
             name: element.name,
-            until: 'none',
             marker_type: element.marker_type, 
             enable: element.enable,
-            lastChange: lastChange
+            created_at: created_at,
+            updated_at: updated_at
           }
         }else if(action.payload.adminFilter == 'enabled'){
           if(element.enable){
@@ -70,10 +65,10 @@ export default function(state = defaultValues , action) {
               lat: element.lat,
               lng: element.long,
               name: element.name,
-              until: 'none',
               marker_type: element.marker_type, 
               enable: element.enable,
-              lastChange: lastChange
+              created_at: created_at,
+              updated_at: updated_at
             }
           }
         }else if(action.payload.adminFilter == 'disabled'){
@@ -82,10 +77,10 @@ export default function(state = defaultValues , action) {
               lat: element.lat,
               lng: element.long,
               name: element.name,
-              until: 'none',
               marker_type: element.marker_type, 
               enable: element.enable,
-              lastChange: lastChange
+              created_at: created_at,
+              updated_at: updated_at
             }
           }
         }else{

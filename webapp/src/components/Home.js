@@ -31,6 +31,7 @@ class Home extends Component {
       }
     }
     this.onClickCenterMap = this.onClickCenterMap.bind(this);
+    this.forceCenter = this.forceCenter.bind(this);
   }
 
   mapRef = React.createRef();
@@ -223,6 +224,16 @@ class Home extends Component {
     }
   }
 
+  forceCenter(lat, lng, zoom){
+    this.setState({
+      centerMap:{
+        lat: lat,
+        lng: lng
+      },
+      zoom: zoom
+    });
+  }
+
   //TODO: OJO NOMBRE
   /*
   updateCenderMap(){
@@ -280,8 +291,8 @@ class Home extends Component {
             <ZoomControl position={"bottomleft"}/>
           </Map>
         </div>
-        <div style={{position:'fixed', width:'50%', height:'100%', right: '0'}}>
-          <AdminPanel />
+        <div style={{position:'absolute', width:'50%', height:'100%', right: '0'}}>
+          <AdminPanel onForceCenter={this.forceCenter}/>
         </div>
       </div>
     );
